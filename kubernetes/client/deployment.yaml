@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: busybox-deploy
+    tags.datadoghq.com/env: "development"
+    tags.datadoghq.com/service: "busybox"
+    tags.datadoghq.com/version: "1.0"
+  name: busybox-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: busybox-deploy
+  template:
+    metadata:
+      labels:
+        app: busybox-deploy
+        tags.datadoghq.com/env: "development"
+        tags.datadoghq.com/service: "busybox"
+        tags.datadoghq.com/version: "1.0"
+    spec:
+      containers:
+      - image: busybox
+        name: busybox
+        command:
+        - "sh"
+        - "-c"
+        - "while true; do wget -qO- http://app-express:8081/api/helloworld; sleep 5; done"
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "500Mi"
+      restartPolicy: Always

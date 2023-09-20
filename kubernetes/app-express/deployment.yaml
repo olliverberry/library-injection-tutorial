@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app-express
+    tags.datadoghq.com/env: "development"
+    tags.datadoghq.com/service: "app-express"
+    tags.datadoghq.com/version: "0.0.1"
+  name: app-express-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-express
+  template:
+    metadata:
+      labels:
+        app: app-express
+        tags.datadoghq.com/env: "development"
+        tags.datadoghq.com/service: "app-express"
+        tags.datadoghq.com/version: "0.0.1"
+        admission.datadoghq.com/enabled: "true"
+      annotations:
+        admission.datadoghq.com/js-lib.version: "v4.15.0"
+    spec:
+      containers:
+      - image: smehrens/app-express:0.0.2
+        name: app-express
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "500Mi"
+      restartPolicy: Always
